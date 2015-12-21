@@ -6,7 +6,27 @@
 //  Copyright © 2015 Johannes Schriewer. All rights reserved.
 //
 
-import twohundred
+extension UInt8 {
+    func hexString(padded padded:Bool = true) -> String {
+        let dict:[Character] = [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
+        var result = ""
+
+        let c1 = Int(self >> 4)
+        let c2 = Int(self & 0xf)
+
+        if c1 == 0 && padded {
+            result.append(dict[c1])
+        } else if c1 > 0 {
+            result.append(dict[c1])
+        }
+        result.append(dict[c2])
+
+        if (result.characters.count == 0) {
+            return "0"
+        }
+        return result
+    }
+}
 
 /// Quoted printable encoder and decoder
 public class QuotedPrintable {
