@@ -9,5 +9,9 @@
 import PackageDescription
 
 let package = Package(
-    name: "QuotedPrintable"
+    name: "QuotedPrintable",
+    targets: [
+        Target(name:"QuotedPrintableTests", dependencies: [.Target(name: "QuotedPrintable")]),
+        Target(name:"QuotedPrintable")
+    ]
 )
