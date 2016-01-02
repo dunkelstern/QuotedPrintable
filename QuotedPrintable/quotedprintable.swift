@@ -45,7 +45,7 @@ public class QuotedPrintable {
         while let c = gen.next() {
             switch c {
             case 32...60, 62...126:
-                charCount++
+                charCount += 1
                 result.append(UnicodeScalar(c))
             case 13:
                 continue
