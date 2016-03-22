@@ -1,2 +1,5 @@
 .build
 Packages/
+.atllbuild/
+QuotedPrintable.sublime-workspace
+bin/

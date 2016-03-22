@@ -1,0 +1,36 @@
+(package
+  :name "quotedprintable"
+  
+  :tasks {
+    :default {
+      :tool "atllbuild"
+      :sources ["QuotedPrintable/**.swift"]
+      :name "QuotedPrintable"
+      :output-type "static-library"
+      :publish-product true
+      :compile-options ["-enable-testing"]
+    }
+
+    :check {
+      :tool "nop"
+      :dependencies ["run-tests"]
+    }
+
+    :build-tests {
+      :tool "atllbuild"
+      :sources ["QuotedPrintableTests/**.swift"]
+      :output-type "executable"
+      :name "tests"
+      :dependencies ["default"]
+      :xctestify true
+      :xctest-strict true
+      :link-with ["QuotedPrintable.a"]
+    }
+
+    :run-tests {
+      :tool "xctestrun"
+      :test-executable ".atllbuild/products/tests"
+      :dependencies ["build-tests"]
+    }
+  }
+)

@@ -11,14 +11,7 @@ import XCTest
 
 class quotedPrintableTests: XCTestCase {
     
-    var allTests : [(String, () -> Void)] {
-        return [
-            ("testQuotedPrintableEncode", testQuotedPrintableEncode),
-            ("testQuotedPrintableDecode", testQuotedPrintableDecode)
-        ]
-    }
-
-    func testQuotedPrintableEncode() {
+    func testQuotedPrintableEncode() throws {
         var encoded = QuotedPrintable.encode("Hello World")
         XCTAssert(encoded == "Hello World")
         
@@ -29,7 +22,7 @@ class quotedPrintableTests: XCTestCase {
         XCTAssert(encoded == "Nullam id dolor id nibh ultricies vehicula ut id elit. Donec id elit non mi=\r\n porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipi=\r\nscing elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam.")
     }
 
-    func testQuotedPrintableDecode() {
+    func testQuotedPrintableDecode() throws {
         var decoded = QuotedPrintable.decode("Hello World")
         XCTAssert(decoded == "Hello World")
      
@@ -40,3 +33,15 @@ class quotedPrintableTests: XCTestCase {
         XCTAssert(decoded == "Nullam id dolor id nibh ultricies vehicula ut id elit. Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam.")
     }
 }
+
+#if os(Linux)
+extension quotedPrintableTests {
+    static var allTests : [(String, quotedPrintableTests -> () throws -> Void)] {
+        return [
+            ("testQuotedPrintableEncode", testQuotedPrintableEncode),
+            ("testQuotedPrintableDecode", testQuotedPrintableDecode)
+        ]
+    }
+
+}
+#endif

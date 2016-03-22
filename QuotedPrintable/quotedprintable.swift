@@ -36,7 +36,7 @@ public class QuotedPrintable {
     /// - parameter string: String to encode
     /// - returns: quoted printable encoded string
     public class func encode(string: String) -> String {
-        var gen = string.utf8.generate()
+        var gen = string.utf8.makeIterator()
         var charCount = 0
         
         var result = ""
@@ -51,25 +51,25 @@ public class QuotedPrintable {
                 continue
             case 10:
                 if result.characters.last == " " || result.characters.last == "\t" {
-                    result.appendContentsOf("=\r\n")
+                    result.append("=\r\n")
                     charCount = 0
                 } else {
-                    result.appendContentsOf("\r\n")
+                    result.append("\r\n")
                     charCount = 0
                 }
             default:
                 if charCount > 72 {
-                    result.appendContentsOf("=\r\n")
+                    result.append("=\r\n")
                     charCount = 0
                 }
                 result.append(UnicodeScalar(61))
-                result.appendContentsOf(c.hexString().uppercaseString)
+                result.append(c.hexString().uppercased())
                 charCount+=3
             }
             
             if charCount == 75 {
                 charCount = 0
-                result.appendContentsOf("=\r\n")
+                result.append("=\r\n")
             }
         }
         
@@ -82,7 +82,7 @@ public class QuotedPrintable {
     /// - returns: Decoded string
     public class func decode(string: String) -> String {
         var state = QuotedPrintableState.Text
-        var gen = string.utf8.generate()
+        var gen = string.utf8.makeIterator()
         
         // reserve space
         var decodedString = ""

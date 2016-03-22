@@ -1,0 +1,26 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns": [ ".atllbuild", "bin", "user" ],
+			"file_exclude_patterns": [ ".gitignore" ]
+		},
+	],
+	"build_systems": [
+		{
+			"name": "Build with AnarchyTools",
+			"cmd": [ "atbuild", "default" ],
+			"working_dir": "${project_path}",
+			"selector": "source.swift",
+			"file_regex": "^([^:]+.swift):([0-9]+):([0-9]+): error: (.*)$"
+		},
+		{
+			"name": "Run Tests with AnarchyTools",
+			"cmd": [ "atbuild", "check" ],
+			"working_dir": "${project_path}",
+			"selector": "source.swift",
+			"file_regex": "^([^:]+.swift):([0-9]+):([0-9]+): error: (.*)$"
+		}
+	]
+}

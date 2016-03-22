@@ -9,4 +9,4 @@
 import XCTest
 
 print("Starting tests...")
-XCTMain([quotedPrintableTests()])
+XCTMain([testCase(quotedPrintableTests.allTests)])
