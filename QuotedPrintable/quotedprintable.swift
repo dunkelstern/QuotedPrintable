@@ -47,7 +47,6 @@ public class QuotedPrintable {
             case 32...60, 62...126:
                 charCount += 1
 				result.unicodeScalars.append(UnicodeScalar(c))
-                //result.append(UnicodeScalar(c).escaped(asASCII: false))
             case 13:
                 continue
             case 10:
@@ -63,7 +62,6 @@ public class QuotedPrintable {
                     result.append("=\r\n")
                     charCount = 0
                 }
-                //result.append(UnicodeScalar(61).escaped(asASCII: false))
                 result.append("=" + c.hexString().uppercased())
                 charCount+=3
             }
@@ -104,8 +102,7 @@ public class QuotedPrintable {
             
             state = result.state
             if let cOut = result.c {
-				decodedString.unicodeScalars.append(cOut)
-                //decodedString.append(cOut.escaped(asASCII: false))
+                decodedString.unicodeScalars.append(cOut)
             }
         }
         
