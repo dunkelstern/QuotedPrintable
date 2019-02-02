@@ -7,7 +7,7 @@
 //
 
 extension UInt8 {
-    func hexString(padded padded:Bool = true) -> String {
+    func hexString(padded: Bool = true) -> String {
         let dict:[Character] = [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
         var result = ""
 
@@ -21,7 +21,7 @@ extension UInt8 {
         }
         result.append(dict[c2])
 
-        if (result.characters.count == 0) {
+        if (result.count == 0) {
             return "0"
         }
         return result
@@ -40,17 +40,18 @@ public class QuotedPrintable {
         var charCount = 0
         
         var result = ""
-        result.reserveCapacity(string.characters.count)
+        result.reserveCapacity(string.count)
         
         while let c = gen.next() {
             switch c {
             case 32...60, 62...126:
                 charCount += 1
-                result.append(UnicodeScalar(c))
+				result.unicodeScalars.append(UnicodeScalar(c))
+                //result.append(UnicodeScalar(c).escaped(asASCII: false))
             case 13:
                 continue
             case 10:
-                if result.characters.last == " " || result.characters.last == "\t" {
+                if result.hasSuffix(" ") || result.hasSuffix("\t") {
                     result.append("=\r\n")
                     charCount = 0
                 } else {
@@ -62,8 +63,8 @@ public class QuotedPrintable {
                     result.append("=\r\n")
                     charCount = 0
                 }
-                result.append(UnicodeScalar(61))
-                result.append(c.hexString().uppercased())
+                //result.append(UnicodeScalar(61).escaped(asASCII: false))
+                result.append("=" + c.hexString().uppercased())
                 charCount+=3
             }
             
@@ -86,7 +87,7 @@ public class QuotedPrintable {
         
         // reserve space
         var decodedString = ""
-        decodedString.reserveCapacity(string.characters.count)
+        decodedString.reserveCapacity(string.count)
         
         // main parse loop
         while let c = gen.next() {
@@ -103,7 +104,8 @@ public class QuotedPrintable {
             
             state = result.state
             if let cOut = result.c {
-                decodedString.append(cOut)
+				decodedString.unicodeScalars.append(cOut)
+                //decodedString.append(cOut.escaped(asASCII: false))
             }
         }
         
@@ -118,7 +120,7 @@ public class QuotedPrintable {
         case EqualsSecondDigit(firstDigit: UInt8)
     }
     
-    private class func parseText(c: UInt8) -> (c: UnicodeScalar?, state: QuotedPrintableState) {
+    private class func parseText(_ c: UInt8) -> (c: UnicodeScalar?, state: QuotedPrintableState) {
         switch c {
         case 61:
             return (c: nil, state: .Equals)
@@ -127,7 +129,7 @@ public class QuotedPrintable {
         }
     }
     
-    private class func parseEquals(c: UInt8) -> (c: UnicodeScalar?, state: QuotedPrintableState) {
+    private class func parseEquals(_ c: UInt8) -> (c: UnicodeScalar?, state: QuotedPrintableState) {
         switch c {
         case 13:
             return (c: nil, state: .Equals)
@@ -140,7 +142,7 @@ public class QuotedPrintable {
         }
     }
 
-    private class func parseEqualsSecondDigit(c: UInt8, state: QuotedPrintableState) -> (c: UnicodeScalar?, state: QuotedPrintableState) {
+    private class func parseEqualsSecondDigit(_ c: UInt8, state: QuotedPrintableState) -> (c: UnicodeScalar?, state: QuotedPrintableState) {
         switch c {
         case 48...57, 65...70, 97...102:
             if case .EqualsSecondDigit(let c0) = state {
